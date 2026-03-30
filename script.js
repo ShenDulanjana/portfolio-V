@@ -13,32 +13,48 @@ let currentProject = {
  * Triggered when clicking a row in the left-hand list.
  */
 function inspect(row, finalImg, clayImg, title, software, desc) {
-    // 1. UI Feedback: Update active class in the list
+    // 1. UI Feedback: Update active class in the list immediately
     document.querySelectorAll('.asset-row').forEach(r => r.classList.remove('active'));
     row.classList.add('active');
 
-    // 2. Update State: Store paths for the toggle buttons
+    // 2. State Update: Store paths
     currentProject.final = finalImg;
     currentProject.clay = clayImg;
 
-    // 3. Update Content: Change the main display area
+    // 3. THE FIX: Background Preloading
+    // This starts downloading the Clay version immediately so the toggle is instant later
+    const preloadClay = new Image();
+    preloadClay.src = clayImg;
+
     const displayImg = document.getElementById('displayImg');
     
-    // Simple fade transition
-    displayImg.style.opacity = '0.2';
+    // 4. Smooth Transition Logic
+    displayImg.style.opacity = '0.1'; // Drop opacity to hide the "pop"
     
-    setTimeout(() => {
-        displayImg.src = finalImg; // Always default to 'Final' view on new selection
+    // Create a temporary image to check when the NEW "Final" image is actually ready
+    const tempImg = new Image();
+    tempImg.src = finalImg;
+    
+    tempImg.onload = () => {
+        // Only update the UI once the file has actually finished downloading
+        displayImg.src = finalImg; 
+        
         document.getElementById('displayTitle').innerText = title;
         document.getElementById('displaySoft').innerText = software;
         document.getElementById('displayDesc').innerText = desc;
         
-        // Reset toggle buttons to show 'Final' is active
+        // Reset toggle buttons
         document.getElementById('btnFinal').classList.add('active');
         document.getElementById('btnClay').classList.remove('active');
         
+        displayImg.style.opacity = '1'; // Fade back in smoothly
+    };
+
+    // Error handling: if image fails to load, don't leave the screen dark
+    tempImg.onerror = () => {
         displayImg.style.opacity = '1';
-    }, 200);
+        console.error("Failed to load asset path: " + finalImg);
+    };
 }
 /**
  * TOGGLE VIEW FUNCTION
