@@ -13,47 +13,38 @@ let currentProject = {
  * Triggered when clicking a row in the left-hand list.
  */
 function inspect(row, finalImg, clayImg, title, software, desc) {
-    // 1. UI Feedback: Update active class in the list immediately
+    // 1. UI Updates
     document.querySelectorAll('.asset-row').forEach(r => r.classList.remove('active'));
     row.classList.add('active');
 
-    // 2. State Update: Store paths
     currentProject.final = finalImg;
     currentProject.clay = clayImg;
 
-    // 3. THE FIX: Background Preloading
-    // This starts downloading the Clay version immediately so the toggle is instant later
-    const preloadClay = new Image();
-    preloadClay.src = clayImg;
-
     const displayImg = document.getElementById('displayImg');
+    const loader = document.getElementById('loader');
     
-    // 4. Smooth Transition Logic
-    displayImg.style.opacity = '0.1'; // Drop opacity to hide the "pop"
-    
-    // Create a temporary image to check when the NEW "Final" image is actually ready
+    // 2. SHOW LOADING UI
+    displayImg.style.opacity = '0'; // Hide the old image
+    loader.style.display = 'flex'; // Show the spinner
+
+    // 3. PRELOAD LOGIC
     const tempImg = new Image();
     tempImg.src = finalImg;
-    
+
     tempImg.onload = () => {
-        // Only update the UI once the file has actually finished downloading
-        displayImg.src = finalImg; 
+        // Only run this when the new image is 100% ready
+        displayImg.src = finalImg;
         
         document.getElementById('displayTitle').innerText = title;
         document.getElementById('displaySoft').innerText = software;
         document.getElementById('displayDesc').innerText = desc;
         
-        // Reset toggle buttons
+        // 4. HIDE LOADING UI
+        loader.style.display = 'none';
+        displayImg.style.opacity = '1';
+        
         document.getElementById('btnFinal').classList.add('active');
         document.getElementById('btnClay').classList.remove('active');
-        
-        displayImg.style.opacity = '1'; // Fade back in smoothly
-    };
-
-    // Error handling: if image fails to load, don't leave the screen dark
-    tempImg.onerror = () => {
-        displayImg.style.opacity = '1';
-        console.error("Failed to load asset path: " + finalImg);
     };
 }
 /**
