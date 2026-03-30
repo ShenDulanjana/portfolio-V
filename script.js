@@ -13,34 +13,26 @@ let currentProject = {
  * Triggered when clicking a row in the left-hand list.
  */
 function inspect(row, finalImg, clayImg, title, software, desc) {
-    // 1. UI Feedback: Update active class in the list
-    document.querySelectorAll('.asset-row').forEach(r => r.classList.remove('active'));
-    row.classList.add('active');
+    // ... your existing code to update active classes ...
 
-    // 2. Update State: Store paths for the toggle buttons
-    currentProject.final = finalImg;
-    currentProject.clay = clayImg;
+    currentData.final = finalImg;
+    currentData.clay = clayImg;
 
-    // 3. Update Content: Change the main display area
-    const displayImg = document.getElementById('displayImg');
+    // PRELOAD: Create hidden image objects to start the download immediately
+    const img1 = new Image();
+    img1.src = finalImg;
+    const img2 = new Image();
+    img2.src = clayImg;
+
+    // Update the main display
+    const img = document.getElementById('displayImg');
+    img.src = finalImg;
     
-    // Simple fade transition
-    displayImg.style.opacity = '0.2';
-    
-    setTimeout(() => {
-        displayImg.src = finalImg; // Always default to 'Final' view on new selection
-        document.getElementById('displayTitle').innerText = title;
-        document.getElementById('displaySoft').innerText = software;
-        document.getElementById('displayDesc').innerText = desc;
-        
-        // Reset toggle buttons to show 'Final' is active
-        document.getElementById('btnFinal').classList.add('active');
-        document.getElementById('btnClay').classList.remove('active');
-        
-        displayImg.style.opacity = '1';
-    }, 200);
+    // Update text details
+    document.getElementById('displayTitle').innerText = title;
+    document.getElementById('displaySoft').innerText = software;
+    document.getElementById('displayDesc').innerText = desc;
 }
-
 /**
  * TOGGLE VIEW FUNCTION
  * Triggered when clicking 'FINAL' or 'CLAY' buttons on the image.
