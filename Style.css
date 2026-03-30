@@ -1,0 +1,115 @@
+/* --- 04.5 THE SWITCHBOARD VAULT (NEW) --- */
+.vault-container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 50px;
+}
+
+/* Scrollable Asset List */
+.asset-list {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Style for individual rows */
+.asset-row {
+    padding: 20px;
+    border-bottom: 1px solid var(--glass);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.asset-row:hover {
+    background: rgba(255, 62, 62, 0.05);
+}
+
+.asset-row.active {
+    background: var(--accent);
+    color: white;
+}
+
+.asset-row .row-id {
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.5;
+    margin-right: 15px;
+    font-size: 0.7rem;
+}
+
+/* Custom Scrollbar for the list */
+.asset-list::-webkit-scrollbar {
+    width: 4px;
+}
+.asset-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.asset-list::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+}
+
+/* Inspector Layout (Right Side) */
+.asset-inspector {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.inspector-visual {
+    flex: 1;
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--glass);
+}
+
+.inspector-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Better for seeing full renders */
+    transition: opacity 0.3s ease;
+}
+
+.inspector-details {
+    padding-top: 25px;
+}
+
+.inspector-details h3 {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 5px;
+}
+
+.software-bar {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Mobile Fix for Switchboard */
+@media (max-width: 900px) {
+    .vault-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .asset-list {
+        height: 250px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    .inspector-visual {
+        height: 300px;
+    }
+}
